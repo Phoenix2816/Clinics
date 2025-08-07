@@ -15,6 +15,8 @@ namespace SQL_project_1.Controllers
             _clinicRepository = clinicRepository;
         }
 
+
+
         [HttpGet]
         public async Task<IActionResult> GetClinics()
         {
@@ -25,6 +27,21 @@ namespace SQL_project_1.Controllers
             }
             catch (Exception ex) 
             { 
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+
+        [HttpGet("MultipleMapping")]
+        public async Task<IActionResult> GetClinicsDoctorsMultipleMapping()
+        {
+            try
+            {
+                var clinic = await _clinicRepository.GetClinicsDoctorsMultipleMapping();
+                return Ok(clinic);
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(500, ex.Message);
             }
 

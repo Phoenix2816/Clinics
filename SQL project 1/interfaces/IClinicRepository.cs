@@ -5,5 +5,7 @@ namespace SQL_project_1.interfaces
     public interface IClinicRepository
     {
         public Task<IEnumerable<Clinic>> GetClinics();
+
+        public Task<List<Clinic>> GetClinicsDoctorsMultipleMapping();
     }
 }
