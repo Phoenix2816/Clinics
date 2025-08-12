@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SQL_project_1.DTO;
 using SQL_project_1.interfaces;
 
 namespace SQL_project_1.Controllers
@@ -20,13 +21,13 @@ namespace SQL_project_1.Controllers
         [HttpGet]
         public async Task<IActionResult> GetClinics()
         {
-            try 
+            try
             {
                 var clinics = await _clinicRepository.GetClinics();
                 return Ok(clinics);
             }
-            catch (Exception ex) 
-            { 
+            catch (Exception ex)
+            {
                 return StatusCode(500, ex.Message);
             }
 
@@ -46,5 +47,61 @@ namespace SQL_project_1.Controllers
             }
 
         }
+
+
+        [HttpPost]
+
+        public async Task<IActionResult> CreateClinic(ClinicForCreationDto clinic)
+        {
+            try
+            {
+                await _clinicRepository.CreateClinic(clinic);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("{id}", Name = "ClinicById")]
+        public async Task<IActionResult> GetClinic(int id)
+        {
+            try
+            {
+                var clinic = await _clinicRepository.GetClinic(id);
+                if (clinic == null)
+                {
+                    return NotFound();
+                }
+                return Ok(clinic);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+
+            }
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateClinic(int id, ClinicForUpdateDto clinic)
+        {
+            try
+            {
+                var dbClinic = await _clinicRepository.GetClinic(id);
+                if (dbClinic == null)
+                {
+                    return NotFound();
+                }
+
+                await _clinicRepository.UpdateClinic(id, clinic);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+
+            }
+        }
+
     }
 }

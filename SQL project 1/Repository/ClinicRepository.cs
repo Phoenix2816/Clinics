@@ -1,5 +1,9 @@
-﻿using Clinics.Context;
+﻿using System.Data;
+using System.Security.Policy;
+using Clinics.Context;
 using Dapper;
+using Microsoft.AspNetCore.Http.HttpResults;
+using SQL_project_1.DTO;
 using SQL_project_1.Entities;
 using SQL_project_1.interfaces;
 
@@ -47,9 +51,45 @@ namespace SQL_project_1.Repository
             }
         }
 
-        //Task<List<Clinic>> IClinicRepository.GetClinicsDoctorsMultipleMapping()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public async Task CreateClinic(ClinicForCreationDto clinic)
+        {
+            var query = "insert into clinics (Name, Address) values (@Name, @Address)";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("Name", clinic.Name, DbType.String); ;
+            parameters.Add("Address", clinic.Address, DbType.String); ;
+
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, parameters);
+            }
+        }
+
+        public async Task<Clinic> GetClinic(int id)
+        {
+            var query = "select * from clinics where Id = @Id";
+
+            using (var connection = _context.CreateConnection())
+            {
+                var clinic = await connection.QuerySingleOrDefaultAsync<Clinic>(query, new { id });
+                return clinic;
+
+            }
+        }
+        public async Task UpdateClinic(int id, ClinicForUpdateDto clinic)
+        {
+            var query = "update clinics set Name = @Name, Address = @Address where Id = @Id";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("Id", id, DbType.Int32);
+            parameters.Add("Name", clinic.Name, DbType.String);
+            parameters.Add("Address", clinic.Address, DbType.String);
+
+            using (var connection = _context.CreateConnection()){
+                await connection.ExecuteAsync(query, parameters);   
+            }
+        }
+
+
     }
 }

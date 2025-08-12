@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Microsoft.AspNetCore.Mvc;
+using SQL_project_1.DTO;
 using SQL_project_1.Entities;
 using SQL_project_1.interfaces;
 using SQL_project_1.Repository;
@@ -48,6 +49,61 @@ namespace SQL_project_1.Controllers
                 return StatusCode(500, ex.Message);
             }
 
+        }
+
+
+        [HttpPost]
+
+        public async Task<IActionResult> CreateDoctor(DoctorForCreationDto doctor)
+        {
+            try
+            {
+                await _doctorRepository.CreateDoctor(doctor);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("{id}", Name = "DoctorById")]
+        public async Task<IActionResult> GetDoctor(int id)
+        {
+            try
+            {
+                var doctor = await _doctorRepository.GetDoctor(id);
+                if (doctor == null)
+                {
+                    return NotFound();
+                }
+                return Ok(doctor);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+
+            }
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateDoctor(int id, DoctorForUpdateDto doctor)
+        {
+            try
+            {
+                var dbDoctor = await _doctorRepository.GetDoctor(id);
+                if (dbDoctor == null)
+                {
+                    return NotFound();
+                }
+
+                await _doctorRepository.UpdateDoctor(id, doctor);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+
+            }
         }
     }
 }

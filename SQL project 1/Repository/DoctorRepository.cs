@@ -1,7 +1,10 @@
-﻿using Dapper;
+﻿using System.Data;
+using System.Numerics;
+using Clinics.Context;
+using Dapper;
+using SQL_project_1.DTO;
 using SQL_project_1.Entities;
 using SQL_project_1.interfaces;
-using Clinics.Context;
 
 namespace SQL_project_1.Repository
 {
@@ -44,6 +47,49 @@ namespace SQL_project_1.Repository
                     }
                     );
                 return doctors.Distinct().ToList();
+            }
+        }
+
+
+        public async Task CreateDoctor(DoctorForCreationDto doctor)
+        {
+            var query = "insert into doctors (Name, Surname, Position, Clinic_id) values (@Name, @Surname, @Position, @Clinic_id)";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("Name", doctor.Name, DbType.String); ;
+            parameters.Add("Surname", doctor.Surname, DbType.String); ;
+            parameters.Add("Position", doctor.Position, DbType.String); ;
+            parameters.Add("Clinic_id", doctor.Clinic_id, DbType.Int32); ;
+
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, parameters);
+            }
+        }
+        public async Task<Doctor> GetDoctor(int id)
+        {
+            var query = "select * from doctors where Id = @Id";
+
+            using (var connection = _context.CreateConnection())
+            {
+                var doctor = await connection.QuerySingleOrDefaultAsync<Doctor>(query, new { id });
+                return doctor;
+
+            }
+        }
+        public async Task UpdateDoctor(int id, DoctorForUpdateDto doctor)
+        {
+            var query = "update doctors set Name = @Name, Surname = @Surname, Position = @Position where Id = @Id";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("Id", id, DbType.Int32);
+            parameters.Add("Name", doctor.Name, DbType.String);
+            parameters.Add("Surname", doctor.Surname, DbType.String);
+            parameters.Add("Position", doctor.Position, DbType.String);
+
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, parameters);
             }
         }
 
