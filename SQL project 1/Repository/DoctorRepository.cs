@@ -79,19 +79,30 @@ namespace SQL_project_1.Repository
         }
         public async Task UpdateDoctor(int id, DoctorForUpdateDto doctor)
         {
-            var query = "update doctors set Name = @Name, Surname = @Surname, Position = @Position where Id = @Id";
+            var query = "update doctors set Name = @Name, Surname = @Surname, Position = @Position, Clinic_id = @Clinic_id where Id = @Id";
 
             var parameters = new DynamicParameters();
             parameters.Add("Id", id, DbType.Int32);
             parameters.Add("Name", doctor.Name, DbType.String);
             parameters.Add("Surname", doctor.Surname, DbType.String);
             parameters.Add("Position", doctor.Position, DbType.String);
+            parameters.Add("Clinic_id", doctor.Clinic_id, DbType.Int32);  // Add Clinic_id parameter
 
             using (var connection = _context.CreateConnection())
             {
                 await connection.ExecuteAsync(query, parameters);
             }
         }
+        public async Task DeleteDoctor(int id)
+        {
+            var query = "delete from doctors where Id = @Id";
+
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, new { id });
+            }
+        }
+
 
     }
 }

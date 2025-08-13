@@ -102,6 +102,26 @@ namespace SQL_project_1.Controllers
 
             }
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteClinic(int id)
+        {
+            try
+            {
+                var dbClinic = await _clinicRepository.GetClinic(id);
+                if (dbClinic == null)
+                {
+                    return NotFound();
+                }
+
+                await _clinicRepository.DeleteClinic(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+
+            }
+        }
 
     }
 }

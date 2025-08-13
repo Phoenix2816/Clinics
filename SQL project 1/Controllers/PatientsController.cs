@@ -85,8 +85,29 @@ namespace SQL_project_1.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePatient(int id)
+        {
+            try
+            {
+                var dbPatient = await _patientRepository.GetPatient(id);
+                if (dbPatient == null)
+                {
+                    return NotFound();
+                }
+
+                await _patientRepository.DeletePatient(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
 
             }
         }
+
+
     }
 }

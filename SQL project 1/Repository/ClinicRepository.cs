@@ -89,6 +89,15 @@ namespace SQL_project_1.Repository
                 await connection.ExecuteAsync(query, parameters);   
             }
         }
+        public async Task DeleteClinic(int id)
+        {
+            var query = "delete from clinics where Id = @Id";
+
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, new {id});
+            }
+        }
 
 
     }

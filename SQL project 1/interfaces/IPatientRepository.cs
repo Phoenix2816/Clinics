@@ -11,6 +11,7 @@ namespace SQL_project_1.interfaces
 
         public Task<Patient> GetPatient(int id);
         public Task UpdatePatient(int id, PatientForUpdateDto patient);
+        public Task DeletePatient(int id);
 
     }
 }

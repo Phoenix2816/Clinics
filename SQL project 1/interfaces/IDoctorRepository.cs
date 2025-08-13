@@ -11,5 +11,6 @@ namespace SQL_project_1.interfaces
         public Task<List<Doctor>> GetDoctorsPatientsMultipleMapping();
         public Task<Doctor> GetDoctor(int id);
         public Task UpdateDoctor(int id, DoctorForUpdateDto doctor);
+        public Task DeleteDoctor(int id);
     }
 }

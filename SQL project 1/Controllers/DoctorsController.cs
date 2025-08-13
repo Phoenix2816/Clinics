@@ -105,5 +105,25 @@ namespace SQL_project_1.Controllers
 
             }
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDoctor(int id)
+        {
+            try
+            {
+                var dbDoctor = await _doctorRepository.GetDoctor(id);
+                if (dbDoctor == null)
+                {
+                    return NotFound();
+                }
+
+                await _doctorRepository.DeleteDoctor(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+
+            }
+        }
     }
 }
